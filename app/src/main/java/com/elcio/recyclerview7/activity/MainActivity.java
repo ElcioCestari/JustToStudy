@@ -56,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
         return new OnItemClickListner() {
             @Override
             public void onClick(Person person) {
-                myCustomToast(person.toString());
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                intent.putExtra(getString(R.string.person_label), person);
+                startActivity(intent);
             }
         };
     }
