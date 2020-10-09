@@ -16,6 +16,11 @@ import java.util.List;
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     private List<Person> personList;
+    private OnItemClickListner onItemClickListner;
+
+    public void setOnItemClickListner(OnItemClickListner onItemClickListner) {
+        this.onItemClickListner = onItemClickListner;
+    }
 
     public Adapter(List<Person> personList) {
         this.personList = personList;
@@ -32,6 +37,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.txtName.setText(personList.get(position).getName().toString());
         holder.txtId.setText(personList.get(position).getId().toString());
+        holder.person = personList.get(position);
     }
 
     @Override
@@ -42,11 +48,19 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtName;
         private TextView txtId;
+        private Person person;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtName = itemView.findViewById(R.id.txtName);
             txtId = itemView.findViewById(R.id.txtId);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListner.onClick(person);
+                }
+            });
         }
     }
 }

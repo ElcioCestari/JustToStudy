@@ -9,10 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.elcio.recyclerview7.R;
 import com.elcio.recyclerview7.adapter.Adapter;
+import com.elcio.recyclerview7.adapter.OnItemClickListner;
 import com.elcio.recyclerview7.model.ListPerson;
+import com.elcio.recyclerview7.model.Person;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,12 +43,26 @@ public class MainActivity extends AppCompatActivity {
 
         buildAdapter();
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayout.HORIZONTAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayout.VERTICAL));
         recyclerView.setAdapter(adapter);
     }
 
     private void buildAdapter() {
          adapter = new Adapter(new ListPerson().getPersonList());
+         adapter.setOnItemClickListner(adapterOnItemClickListner());
+    }
+
+    private OnItemClickListner adapterOnItemClickListner() {
+        return new OnItemClickListner() {
+            @Override
+            public void onClick(Person person) {
+                myCustomToast(person.toString());
+            }
+        };
+    }
+
+    private void myCustomToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private View.OnClickListener fABListner() {
