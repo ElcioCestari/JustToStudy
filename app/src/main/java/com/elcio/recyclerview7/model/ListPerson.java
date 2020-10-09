@@ -50,6 +50,7 @@ public class ListPerson {
     }
 
     public List<Person> getPersonList() {
+        if (this.personList.size() <= 0) this.addPersonToList();
         return personList;
     }
 
