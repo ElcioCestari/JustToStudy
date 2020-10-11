@@ -33,8 +33,14 @@ public class MainActivity extends AppCompatActivity {
         fAB = findViewById(R.id.floatingActionButton);
 
         fAB.setOnClickListener(fABListner());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         setRecyclerView();
+
     }
 
     private void setRecyclerView() {
@@ -48,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buildAdapter() {
-         adapter = new Adapter(new ListPerson().getPersonList());
+         adapter = new Adapter(new ListPerson(getApplicationContext()).getPersonList());
          adapter.setOnItemClickListner(adapterOnItemClickListner());
     }
 

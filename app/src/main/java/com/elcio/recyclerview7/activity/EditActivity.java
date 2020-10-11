@@ -9,12 +9,15 @@ import android.widget.Toast;
 
 import com.elcio.recyclerview7.R;
 import com.elcio.recyclerview7.model.Person;
+import com.elcio.recyclerview7.model.dao.PersonDAO;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class EditActivity extends AppCompatActivity {
 
     private TextInputEditText editName;
     private Button btnSave;
+    private Boolean updateOrSavePerson;
+    private Person person;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +29,42 @@ public class EditActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(myBtnListner());
 
-        loadBundle();
     }
 
-    private void loadBundle() {
-        if(getIntent().getSerializableExtra(getString(R.string.person_label)).equals(null) ){
-            myCustonToast("vazio");
-        }else{
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        updateOrSavePerson = loadBundle();
+    }
+
+    private Boolean loadBundle() {
+        this.person = (Person) getIntent().getSerializableExtra(getString(R.string.person_label));
+        if(person != null ){
             setEditName();
+            return true;
         }
+        return false;
+    }
+
+    private void updateAnExistentPerson() {
+        PersonDAO personDAO = new PersonDAO(getApplicationContext());
+        this.person.setName(getPerson().getName().toString());
+        personDAO.update(this.person);
+    }
+
+    private void insertNewPerson() {
+        PersonDAO personDAO = new PersonDAO(getApplicationContext());
+        Person person = getPerson();
+
+        personDAO.insert(person);
+    }
+
+    private Person getPerson() {
+        String name = editName.getText().toString();
+        Integer id = 0;
+
+        return new Person(name,id);
     }
 
     private void setEditName() {
@@ -47,7 +77,12 @@ public class EditActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myCustonToast("salvando...");
+                if (updateOrSavePerson) {
+                    updateAnExistentPerson();
+                } else {
+                    insertNewPerson();
+                }
+                finish();
             }
         };
     }
